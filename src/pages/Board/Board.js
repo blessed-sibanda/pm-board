@@ -1,5 +1,5 @@
-import { useState, useEffect } from "react";
 import Lane from "../../components/Lane/Lane";
+import useDataFetching from "../../hooks/useDataFetching";
 import "./Board.css";
 
 const lanes = [
@@ -10,28 +10,9 @@ const lanes = [
 ];
 
 function Board() {
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState("");
-  const [tasks, setTasks] = useState([]);
-
-  useEffect(() => {
-    async function fetchData() {
-      try {
-        const tasks = await fetch(
-          `https://my-json-server.typicode.com/PacktPublishing/React-Projects-Second-Edition/tasks`
-        );
-        const result = await tasks.json();
-        if (result) {
-          setTasks(result);
-          setLoading(false);
-        }
-      } catch (err) {
-        setLoading(false);
-        setError(err.message);
-      }
-    }
-    fetchData();
-  }, []);
+  const [loading, error, tasks] = useDataFetching(
+    "https://my-json-server.typicode.com/PacktPublishing/React-Projects-Second-Edition/tasks"
+  );
 
   return (
     <div className="Board-wrapper">
